@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>متجر السرور أونلاين</title>
+<style>
+body{font-family:tahoma;background:#f5f5f5;margin:0}
+header{background:#0d6efd;color:#fff;padding:15px;text-align:center;font-size:22px}
+.container{padding:15px}
+.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px}
+.product{background:#fff;border-radius:10px;padding:10px;text-align:center;box-shadow:0 0 5px #ccc}
+.product img{width:100%;height:120px;object-fit:cover;border-radius:8px}
+.product button{background:#0d6efd;color:#fff;border:none;padding:8px;width:100%;border-radius:5px;margin-top:5px;cursor:pointer}
+
+.cart{background:#fff;margin-top:20px;padding:10px;border-radius:10px}
+.cart-item{display:flex;justify-content:space-between;margin-bottom:5px}
+
+input,textarea{width:100%;padding:8px;margin:5px 0;border:1px solid #ccc;border-radius:5px}
+
+.order-btn{background:green;color:white;padding:12px;border:none;width:100%;border-radius:6px;font-size:18px;cursor:pointer}
+.total{font-weight:bold;margin-top:10px}
+</style>
+</head>
+
+<body>
+
+<header>🛒 متجر السرور أونلاين</header>
+
+<div class="container">
+
+<h3>المنتجات</h3>
+<div class="products" id="products"></div>
+
+<div class="cart">
+<h3>سلة المشتريات</h3>
+<div id="cartItems"></div>
+<div class="total" id="totalPrice">الإجمالي: 0 ريال</div>
+</div>
+
+<h3>بيانات العميل (إجباري)</h3>
+<input type="text" id="name" placeholder="الاسم الكامل" required>
+<input type="tel" id="phone" placeholder="رقم التواصل" required>
+<textarea id="address" placeholder="العنوان الوطني بالتفصيل" required></textarea>
+
+<button class="order-btn" onclick="sendOrder()">تأكيد الطلب عبر واتساب</button>
+
+</div>
+
+<script>
+const products=[
+{name:"ساعة رجالية",price:120,img:"https://via.placeholder.com/200"},
+{name:"عطر رجالي",price:150,img:"https://via.placeholder.com/200"},
+{name:"سماعة بلوتوث",price:90,img:"https://via.placeholder.com/200"},
+{name:"نظارة شمس",price:70,img:"https://via.placeholder.com/200"}
+];
+
+let cart=[];
+
+const productsDiv=document.getElementById("products");
+products.forEach((p,i)=>{
+productsDiv.innerHTML+=`
+<div class="product">
+<img src="${p.img}">
+<h4>${p.name}</h4>
+<p>${p.price} ريال</p>
+<button onclick="addToCart(${i})">أضف للسلة</button>
+</div>`;
+});
+
+function addToCart(i){
+cart.push(products[i]);
+renderCart();
+}
+
+function renderCart(){
+let html=""; let total=0;
+cart.forEach((c,idx)=>{
+total+=c.price;
+html+=`<div class="cart-item">
+<span>${c.name}</span>
+<span>${c.price} ريال</span>
+</div>`;
+});
+document.getElementById("cartItems").innerHTML=html;
+document.getElementById("totalPrice").innerText="الإجمالي: "+total+" ريال";
+}
+
+function sendOrder(){
+if(cart.length==0){alert("السلة فارغة");return;}
+
+let name=document.getElementById("name").value.trim();
+let phone=document.getElementById("phone").value.trim();
+let address=document.getElementById("address").value.trim();
+
+if(!name||!phone||!address){
+alert("من فضلك أدخل جميع البيانات");
+return;
+}
+
+let msg="طلب جديد من متجر السرور أونلاين%0A";
+msg+="الاسم: "+name+"%0A";
+msg+="الهاتف: "+phone+"%0A";
+msg+="العنوان: "+address+"%0A";
+msg+="المنتجات:%0A";
+
+let total=0;
+cart.forEach(c=>{
+msg+="- "+c.name+" ("+c.price+" ريال)%0A";
+total+=c.price;
+});
+msg+="الإجمالي: "+total+" ريال";
+
+let whatsappNumber="966XXXXXXXXX"; // ضع رقمك هنا بدون +
+window.open("https://wa.me/"+whatsappNumber+"?text="+msg,"_blank");
+}
+</script>
+
+</body>
+</html>
