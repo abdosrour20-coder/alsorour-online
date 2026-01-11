@@ -74,42 +74,38 @@ renderCart();
 }
 
 function renderCart() {
-  let html = "";
+  const cartContainer = document.getElementById("cartItems");
+  cartContainer.innerHTML = ""; // مسح القديم
   let total = 0;
 
   cart.forEach((c, idx) => {
     total += c.price;
 
-    // HTML للسلة مع أيقونة حذف
-    html += `
-      <div class="cart-item">
-        <span>${c.name}</span>
-        <span>${c.price} ريال</span>
-        <span class="remove-item" data-index="${idx}" style="cursor:pointer;">🗑️</span>
-      </div>
+    // إنشاء العنصر ديناميكيًا
+    const div = document.createElement("div");
+    div.className = "cart-item";
+
+    div.innerHTML = `
+      <span>${c.name}</span>
+      <span>${c.price} ريال</span>
+      <span class="remove-item" style="cursor:pointer;">🗑️</span>
     `;
-  });
 
-  document.getElementById("cartItems").innerHTML = html;
-  document.getElementById("totalPrice").innerText = "الإجمالي: " + total + " ريال";
-
-  // ربط حدث الحذف لكل زر بعد إنشاء العناصر
-  const removeButtons = document.querySelectorAll(".remove-item");
-  removeButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const index = btn.getAttribute("data-index");
-      removeFromCart(index);
+    // ربط حدث الحذف
+    div.querySelector(".remove-item").addEventListener("click", () => {
+      removeFromCart(idx);
     });
+
+    cartContainer.appendChild(div);
   });
+
+  document.getElementById("totalPrice").innerText = "الإجمالي: " + total + " ريال";
 }
 
 // دالة الحذف
 function removeFromCart(index) {
   cart.splice(index, 1); // حذف العنصر من المصفوفة
-  renderCart();           // إعادة عرض السلة بعد الحذف
-}
-document.getElementById("cartItems").innerHTML=html;
-document.getElementById("totalPrice").innerText="الإجمالي: "+total+" ريال";
+  renderCart();           // إعادة رسم السلة بعد الحذف
 }
 
 function sendOrder(){
