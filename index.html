@@ -75,12 +75,13 @@ renderCart();
 
 function renderCart(){
 let html=""; let total=0;
-cart.forEach((c,idx)=>{
-total+=c.price;
-html+=`<div class="cart-item">
-<span>${c.name}</span>
-<span>${c.price} ريال</span>
-</div>`;
+cart.forEach((c, idx) => {
+  total += c.price;
+  html += `<div class="cart-item">
+    <span>${c.name}</span>
+    <span>${c.price} ريال</span>
+    <span style="cursor:pointer;" onclick="removeFromCart(${idx})">🗑️</span>
+  </div>`;
 });
 document.getElementById("cartItems").innerHTML=html;
 document.getElementById("totalPrice").innerText="الإجمالي: "+total+" ريال";
